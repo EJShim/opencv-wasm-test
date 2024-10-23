@@ -1,0 +1,18 @@
+services :
+  cmake :
+      image : dockcross/web-wasm:20241021-2e07fc0
+      volumes : 
+        - ./:/work
+      working_dir: /work/build_wasm
+      command : cmake /work/ -G Ninja -DCMAKE_BUILD_TYPE=Release
+  make :
+      image : dockcross/web-wasm:20241021-2e07fc0
+      volumes:
+        - ./:/work
+      working_dir: /work/build_wasm
+      # command : sh -c 'ninja -j7 && cp /work/build_wasm/*.wasm /work/src/lib/wasm/ && cp /work/build_wasm/*.js /work/src/lib/wasm/'
+      command : sh -c 'ninja -j7'
+      depends_on:
+        cmake:
+          condition: service_completed_successfully
+  
